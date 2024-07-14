@@ -1,0 +1,25 @@
+.loader {
+  display: none;
+  /* Ascundem loader-ul initial */
+}
+
+.loader:not(.hidden) {
+  display: block;
+  /* Afișăm loader-ul când clasa hidden nu este prezentă */
+}
+
+.breed-select.hidden,
+.cat-info.hidden {
+  display: none;
+  /* Ascundem selectul de rase și informațiile despre pisică când au clasa hidden */
+}
+
+.error {
+  display: none;
+  color: red;
+}
+
+.error:not(.hidden) {
+  display: block;
+  /* Afișăm eroarea când clasa hidden nu este prezentă */
+}
