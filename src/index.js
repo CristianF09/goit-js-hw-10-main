@@ -1,54 +1,28 @@
-import { fetchBreeds, fetchCatByBreed } from './cat-api.js';
+import axios from "axios";
 import SlimSelect from 'slim-select';
 import Notiflix from 'notiflix';
 
-// Select elements
+axios.defaults.headers.common["x-api-key"] = "YOUR_API_KEY";
+
 const breedSelect = document.querySelector('.breed-select');
 const loader = document.querySelector('.loader');
-const errorDiv = document.querySelector('.error');
+const errorElement = document.querySelector('.error');
 const catInfo = document.querySelector('.cat-info');
 
-/**
- * Show loader
- */
-const showLoader = () => {
-  loader.classList.remove('hidden');
-};
+new SlimSelect({
+  select: breedSelect
+});
 
-/**
- * Hide loader
- */
-const hideLoader = () => {
-  loader.classList.add('hidden');
-};
 
-/**
- * Show error message
- * @param {string} message - The error message to display
- */
-const showError = (message) => {
-  errorDiv.textContent = message;
-  errorDiv.classList.remove('hidden');
-};
-
-/**
- * Hide error message
- */
-const hideError = () => {
-  errorDiv.classList.add('hidden');
-};
-
-/**
- * Load breeds and populate the select element
- */
-const loadBreeds = async () => {
+async function fetchBreeds() {
   try {
-    showLoader();
-    hideError();
-
+    loader.classList.remove('hidden');
     breedSelect.classList.add('hidden');
-
-    const breeds = await fetchBreeds();
+    errorElement.classList.add('hidden');
+    
+    const response = await axios.get('https://api.thecatapi.com/v1/breeds');
+    const breeds = response.data;
+    
     breedSelect.innerHTML = breeds
       .map(breed => `<option value="${breed.id}">${breed.name}</option>`)
       .join('');
@@ -58,47 +32,42 @@ const loadBreeds = async () => {
     });
 
     breedSelect.classList.remove('hidden');
-    hideLoader();
   } catch (error) {
-    hideLoader();
-    showError('Failed to load breeds');
+    errorElement.classList.remove('hidden');
+    Notiflix.Notify.failure('Failed to load breeds. Please try again later.');
+  } finally {
+    loader.classList.add('hidden');
   }
-};
+}
 
-/**
- * Load cat by breed and display info
- * @param {string} breedId - The ID of the breed
- */
-const loadCatByBreed = async (breedId) => {
+async function fetchCatByBreed(breedId) {
   try {
-    showLoader();
-    hideError();
-
+    loader.classList.remove('hidden');
     catInfo.classList.add('hidden');
+    errorElement.classList.add('hidden');
 
-    const cat = await fetchCatByBreed(breedId);
+    const response = await axios.get(`https://api.thecatapi.com/v1/images/search?breed_ids=${breedId}`);
+    const catData = response.data[0];
+
     catInfo.innerHTML = `
-      <h2 class="breed-name">${cat.breeds[0].name}</h2>
-      <p class="description">${cat.breeds[0].description}</p>
-      <p class="temperament">${cat.breeds[0].temperament}</p>
-      <img class="cat-image" src="${cat.url}" alt="Cat Image" />
+      <h2>${catData.breeds[0].name}</h2>
+      <p>${catData.breeds[0].description}</p>
+      <p><strong>Temperament:</strong> ${catData.breeds[0].temperament}</p>
+      <img src="${catData.url}" alt="Cat Image">
     `;
 
     catInfo.classList.remove('hidden');
-    hideLoader();
   } catch (error) {
-    hideLoader();
-    showError('Failed to load cat information');
+    errorElement.classList.remove('hidden');
+    Notiflix.Notify.failure('Failed to load cat information. Please try again later.');
+  } finally {
+    loader.classList.add('hidden');
   }
-};
+}
 
-// Event listener for breed select change
 breedSelect.addEventListener('change', (event) => {
   const breedId = event.target.value;
-  if (breedId) {
-    loadCatByBreed(breedId);
-  }
+  fetchCatByBreed(breedId);
 });
 
-// Load breeds on page load
-loadBreeds();
+fetchBreeds();
