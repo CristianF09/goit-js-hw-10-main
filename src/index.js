@@ -7,10 +7,6 @@ const loader = document.querySelector('.loader');
 const errorElement = document.querySelector('.error');
 const catInfo = document.querySelector('.cat-info');
 
-new SlimSelect({
-  select: breedSelect
-});
-
 const showLoader = () => {
   loader.classList.remove('hidden');
 };
@@ -42,7 +38,7 @@ const loadBreeds = async () => {
       .join('');
 
     new SlimSelect({
-      select: breedSelect
+      select: breedSelect,
     });
 
     breedSelect.classList.remove('hidden');
