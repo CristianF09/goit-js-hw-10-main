@@ -2,7 +2,7 @@ import axios from "axios";
 import SlimSelect from 'slim-select';
 import Notiflix from 'notiflix';
 
-axios.defaults.headers.common["x-api-key"] = "YOUR_API_KEY";
+axios.defaults.headers.common["x-api-key"] = "YOUR_API_KEY_HERE";
 
 const breedSelect = document.querySelector('.breed-select');
 const loader = document.querySelector('.loader');
@@ -12,7 +12,6 @@ const catInfo = document.querySelector('.cat-info');
 new SlimSelect({
   select: breedSelect
 });
-
 
 async function fetchBreeds() {
   try {
