@@ -2,9 +2,11 @@ import axios from 'axios';
 
 axios.defaults.headers.common['x-api-key'] = 'live_DZEVyJW3VcBIexNIe3baRDqWHCXVAhgw8tJCASx5USwQZM7mdoM34w9t2SuiEjMc';
 
- @returns {Promise<Array>}
- @throws 
-
+/**
+ * Fetches a list of cat breeds.
+ * @returns {Promise<Array>} A promise that resolves to an array of cat breeds.
+ * @throws Will throw an error if the request fails.
+ */
 export const fetchBreeds = async () => {
   try {
     const response = await axios.get('https://api.thecatapi.com/v1/breeds');
@@ -14,10 +16,12 @@ export const fetchBreeds = async () => {
   }
 };
 
- @param {string} breedId 
- @returns {Promise<Object>} 
- @throws 
- 
+/**
+ * Fetches information about a specific breed by breed ID.
+ * @param {string} breedId - The ID of the breed.
+ * @returns {Promise<Object>} A promise that resolves to an object containing information about the cat breed.
+ * @throws Will throw an error if the request fails.
+ */
 export const fetchCatByBreed = async (breedId) => {
   try {
     const response = await axios.get(`https://api.thecatapi.com/v1/images/search?breed_ids=${breedId}`);
